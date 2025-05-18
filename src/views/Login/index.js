@@ -1,7 +1,8 @@
 import { Card, Form, Input, Button, Checkbox, message } from 'antd'
-import React, { Component } from 'react'
-import {wrappedComp} from 'utils/navwrapper'
-import './index.scss'
+import React, { Component, use } from 'react'
+import {hookWrapper} from 'utils/singlehookwrapper'
+import {useNavigate} from 'react-router-dom';
+import styles from './index.module.scss'
 // 图片必须import后才能使用，不能使用相对路径
 import logo from 'assets/logo.png'
 import { login } from 'apis/login'
@@ -14,7 +15,7 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="login">
+      <div className={styles['login']}>
         <Card className='login-container'>
           <img src={logo} alt='' className='login-logo'></img>
           <Form size='Large' 
@@ -66,13 +67,13 @@ class Login extends Component {
       //this.props.history.push('/home'); 在 React Router v6（与 React 18/19 兼容的最新版本）中，this.props.history 已被废弃，以下是新的解决方案：
       // 使用高阶组件注入的navigate函数进行路由跳转
       message.success('Login successful!',1);
-      this.props.navigate('/home');
+      this.props.useNavigate('/layout');
     } catch (error) {
       this.setState({ loading: false });
-      message.warning(error.response.data.message,2);
+      message.warning(error?.response?.data.message,2);
     }
   };
 }
 
 
-export default wrappedComp(Login);
+export default hookWrapper(Login, useNavigate);
