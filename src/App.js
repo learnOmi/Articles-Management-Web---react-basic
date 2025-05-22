@@ -6,11 +6,12 @@ import Article from './views/Article';
 import ArticlePublish from './views/ArticlePublish';
 
 import '@ant-design/v5-patch-for-react-19';
+import { AuthRoute } from 'utils/authroute';
 
 const routes = [
   {path: '/', element: <Login />},
-  {path: '/login', element: <Layout />},
-  {path: '/layout', element: <Layout />, children: [
+  {path: '/login', element: <Login />},
+  {path: '/layout', element: <AuthRoute><Layout /></AuthRoute>, children: [
     {index:true, element: <Home />},
     {index:true, path: 'home', element: <Home />},
     {path: 'article', element: <Article />},

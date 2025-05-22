@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { Outlet } from 'react-router-dom';
 import styles from './index.module.scss'
 import { LaptopOutlined, LogoutOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { Layout, Menu, theme } from 'antd';
+import { Layout, Menu, message, Popconfirm, theme } from 'antd';
 import { hookWrapper } from 'utils/singlehookwrapper';
 import { useNavigate } from 'react-router-dom';
+import { removeToken } from 'utils/storage';
 
 const { Header, Content, Sider } = Layout;
 const sideMenu = [
@@ -34,7 +35,7 @@ const items = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
 );
 
 const defaultSelectedKeys = items[0].key
-
+const title = 'Are you sure to logout?'
 
 
 class LayoutComponent extends Component {
@@ -51,7 +52,11 @@ class LayoutComponent extends Component {
             <div className="logo" />
             <div className='profile'>
               <span>用户</span>
-              <span><LogoutOutlined></LogoutOutlined> 退出</span>
+              <span>
+                <Popconfirm title={title} okText='Yes' cancelText='No' onConfirm={this.logOut} onCancel={()=>{}}>
+                  <LogoutOutlined /> 退出
+                </Popconfirm>
+              </span>
             </div>
           </Header>
           <Layout>
@@ -77,7 +82,16 @@ class LayoutComponent extends Component {
       </div>
     )
   }
+
+  logOut = ()=>{
+    //localStorage.removeItem('token');
+    removeToken();
+    this.props.useNavigate('/login');
+    message.success('Logout successful!',1);
+  };
 }
+
+
 
 
 export default hookWrapper(LayoutComponent, useNavigate, theme.useToken);

@@ -1,11 +1,12 @@
 import { Card, Form, Input, Button, Checkbox, message } from 'antd'
-import React, { Component, use } from 'react'
+import React, { Component } from 'react'
 import {hookWrapper} from 'utils/singlehookwrapper'
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import styles from './index.module.scss'
 // 图片必须import后才能使用，不能使用相对路径
 import logo from 'assets/logo.png'
 import { login } from 'apis/login'
+import { setToken } from 'utils/storage'
 
 
 class Login extends Component {
@@ -63,11 +64,15 @@ class Login extends Component {
     try {
       // 调用登录接口
       const res = await login(mobile, code);
-      localStorage.setItem('token', res.data.token);
+      //localStorage.setItem('token', res.data.token);
+      setToken(res.data.token);
       //this.props.history.push('/home'); 在 React Router v6（与 React 18/19 兼容的最新版本）中，this.props.history 已被废弃，以下是新的解决方案：
       // 使用高阶组件注入的navigate函数进行路由跳转
       message.success('Login successful!',1);
-      this.props.useNavigate('/layout');
+      //this.props.useNavigate('/layout');
+      // 获取Navigate组件的state属性
+      const { state } = this.props.useLocation || {};
+      this.props.useNavigate(state?.from? state.from : '/layout');
     } catch (error) {
       this.setState({ loading: false });
       message.warning(error?.response?.data.message,2);
@@ -76,4 +81,4 @@ class Login extends Component {
 }
 
 
-export default hookWrapper(Login, useNavigate);
+export default hookWrapper(Login, useNavigate, useLocation);
