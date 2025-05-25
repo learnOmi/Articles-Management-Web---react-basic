@@ -17,4 +17,11 @@ const login = (mobile, code) => {
   });
 }
 
-export { login };
+const getUserInfo = () => {
+  return request({
+    url: '/user/profile',
+    method: 'GET'
+  });
+}
+
+export { login, getUserInfo };
