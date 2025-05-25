@@ -1,27 +1,35 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Login from 'views/Login';
-import Layout from 'views/Layout';
-import Home from './views/Home';
-import Article from './views/Article';
-import ArticlePublish from './views/ArticlePublish';
-
 import '@ant-design/v5-patch-for-react-19';
+import {HistoryRouter} from 'utils/history';
+import { Routes,Route } from 'react-router-dom';
+import Login from 'views/Login';
+import { history } from 'utils/history';
+import Layout from 'views/Layout';
+import Home from 'views/Home';
+import Article from 'views/Article';
+import ArticlePublish from 'views/ArticlePublish';
 import { AuthRoute } from 'utils/authroute';
-
-const routes = [
-  {path: '/', element: <Login />},
-  {path: '/login', element: <Login />},
-  {path: '/layout', element: <AuthRoute><Layout /></AuthRoute>, children: [
-    {index:true, element: <Home />},
-    {index:true, path: 'home', element: <Home />},
-    {path: 'article', element: <Article />},
-    {path: 'article-publish', element: <ArticlePublish />}, 
-  ]}
-];
 
 function App() {
   return (
-    <RouterProvider router={createBrowserRouter(routes)} />
+    <>
+      <HistoryRouter history={history}>
+        <Routes>
+          <Route path='/' element={<Login />}/>
+          <Route path='/login' element={<Login />}/>
+          <Route path='/layout/*' element={
+            <AuthRoute>
+              <Layout />
+            </AuthRoute>
+          }>
+            <Route index element={<Home />} />
+            <Route path='home' element={<Home />} />
+            <Route path='article' element={<Article />} />
+            <Route path='article-publish' element={<ArticlePublish />} />
+          </Route>
+        </Routes>
+      </HistoryRouter>
+
+    </>
   );
 }
 

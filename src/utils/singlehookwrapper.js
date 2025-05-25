@@ -3,7 +3,7 @@ export function hookWrapper (Component, ...wrapFunction) {
   return function WrappedComponent(props) {
     const hookList =  wrapFunction;
     const hookObject = {};
-    hookList.map((fn) => {
+    hookList.forEach((fn) => {
       if (typeof fn !== 'function') {
         throw new Error('Invalid argument type');
       }
