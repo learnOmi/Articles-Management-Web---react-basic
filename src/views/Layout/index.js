@@ -70,7 +70,7 @@ class LayoutComponent extends Component {
                 }}
               />
             </Sider>
-            <Layout style={{padding:'24px'}}>
+            <Layout style={{padding:'24px', overflow: 'auto'}}>
               <Content className='layout-content'>
                 <Outlet />
               </Content>

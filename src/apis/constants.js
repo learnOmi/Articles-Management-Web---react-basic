@@ -1,4 +1,4 @@
-import { Value } from "sass";
+import logo from 'assets/logo.png';
 
 export const sideMenu = [
   {name:"数据概览",url:"/layout/home"}, 
@@ -18,7 +18,15 @@ export const articleStatus = [
 export const columnsDef = [
   {
     title: '封面',
-    dataIndex: 'name',
+    dataIndex: 'cover',
+    render:(param)=>{
+      if(param.type === '0') {
+        return (<img src={logo} alt=''/>);
+      }
+      return (
+        <img src={param.images[0]} alt="" style={{ width: 200, height: 120, objectFit: 'cover' }} />
+      )
+    }
   },
   {
     title: '标题',
@@ -30,19 +38,19 @@ export const columnsDef = [
   },
   {
     title: '发布时间',
-    dataIndex: 'publishTime',
+    dataIndex: 'pubdate',
   },
   {
     title: '阅读数',
-    dataIndex: 'readCount',
+    dataIndex: 'read_count',
   },
   {
     title: '点赞数',
-    dataIndex: 'likeCount',
+    dataIndex: 'like_count',
   },
   {
     title: '评论数',
-    dataIndex: 'commentCount',
+    dataIndex: 'comment_count',
   },
   {
     title: '操作',
