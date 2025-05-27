@@ -7,13 +7,9 @@ import { hookWrapper } from 'utils/singlehookwrapper';
 import { useNavigate } from 'react-router-dom';
 import { removeToken } from 'utils/storage';
 import { getUserInfo } from 'apis/user';
+import { sideMenu } from 'apis/constants';
 
 const { Header, Content, Sider } = Layout;
-const sideMenu = [
-  {name:"数据概览",url:"/layout/home"}, 
-  {name:"文章管理",url:"/layout/article"},
-  {name:"内容管理",url:"/layout/article-publish"}
-];
 
 const items = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
   (icon, index) => {

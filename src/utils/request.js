@@ -27,7 +27,7 @@ sevice.interceptors.response.use(
     },
     err => {
         removeToken();
-        if (err?.response.status === 401) {
+        if (err?.response?.status === 401) {
             // 401: token过期
             message.error(err?.response?.data?.message, 2);
             // 组件外部使用history跳转
