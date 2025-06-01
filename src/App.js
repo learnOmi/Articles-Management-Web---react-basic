@@ -1,6 +1,6 @@
 import '@ant-design/v5-patch-for-react-19';
 import {HistoryRouter} from 'utils/history';
-import { Routes,Route } from 'react-router-dom';
+import { Routes,Route, Navigate } from 'react-router-dom';
 import Login from 'views/Login';
 import { history } from 'utils/history';
 import Layout from 'views/Layout';
@@ -14,7 +14,7 @@ function App() {
     <>
       <HistoryRouter history={history}>
         <Routes>
-          <Route path='/' element={<Login />}/>
+          <Route path='/' element={<Navigate to='/layout/home' />} />
           <Route path='/login' element={<Login />}/>
           <Route path='/layout/*' element={
             <AuthRoute>
@@ -28,7 +28,6 @@ function App() {
           </Route>
         </Routes>
       </HistoryRouter>
-
     </>
   );
 }

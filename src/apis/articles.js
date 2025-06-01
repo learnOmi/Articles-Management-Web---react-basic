@@ -7,3 +7,10 @@ export const getArticles = (params) => {
         params
     })
 }
+
+export const delArticle = (params) => {
+    return request({
+        url: 'mp/articles/' + params.id,
+        method: 'DELETE',
+    })
+}

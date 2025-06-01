@@ -32,8 +32,13 @@ sevice.interceptors.response.use(
             message.error(err?.response?.data?.message, 2);
             // 组件外部使用history跳转
             customhistory.push('/login');
-        }else{
-             return Promise.reject(err);
+        // }else if(err?.response?.status === 500){
+        //     message.error(err?.response?.data?.message, 2);
+        // }
+        }
+        else{
+            message.error(err?.response?.data?.message, 2);
+            //return Promise.reject(err);
         }
 
     }
