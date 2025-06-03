@@ -3,9 +3,11 @@ import { hasToken, getToken, removeToken } from './storage';
 import { history as customhistory } from './history'; // Assuming history is exported from history.js
 import { message } from 'antd';
 
+export const baseURL = "http://geek.itheima.net/v1_0/"
+
 // 1.创建axios实例
 const sevice = axios.create({
-    baseURL: "http://geek.itheima.net/v1_0/",
+    baseURL: baseURL,
     timeout: 5000
 });
 
@@ -13,6 +15,7 @@ const sevice = axios.create({
 sevice.interceptors.request.use(
     config => {
         hasToken() && (config.headers.Authorization = `Bearer ${getToken()}`);
+        !hasToken() && (customhistory.push('/login'));
         return config;
     }, 
     err => {
@@ -26,21 +29,19 @@ sevice.interceptors.response.use(
         return res.data;
     },
     err => {
-        removeToken();
-        if (err?.response?.status === 401) {
+        const mes = err?.response?.data?.message;
+        const status = err?.response?.status;
+        if (!status && status === 401) {
+            removeToken();
             // 401: token过期
-            message.error(err?.response?.data?.message, 2);
+            message.error(mes, 2);
             // 组件外部使用history跳转
             customhistory.push('/login');
-        // }else if(err?.response?.status === 500){
-        //     message.error(err?.response?.data?.message, 2);
-        // }
-        }
-        else{
-            message.error(err?.response?.data?.message, 2);
-            //return Promise.reject(err);
-        }
-
+        }else if(mes){
+            message.error(mes, 2);
+        }else if(axios.isAxiosError(err)){
+            message.error(err?.message);
+        }else return Promise.reject(new Error(err))
     }
 );
 

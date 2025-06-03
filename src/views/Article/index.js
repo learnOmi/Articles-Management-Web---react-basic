@@ -1,24 +1,24 @@
 import React, { Component } from 'react'
-import { Form, Card, Breadcrumb, Radio, Button, Select, DatePicker, Table, Modal, message } from 'antd'
+import { Form, Card, Breadcrumb, Radio, Button, DatePicker, Table, Modal, message } from 'antd'
 import { Link } from 'react-router-dom'
 import styles from './index.module.scss'
 import { articleStatus } from 'apis/constants'
-import { getChannels } from 'apis/channels'
 import { columnsDef } from 'apis/constants'
 import { getArticles, delArticle } from 'apis/articles'
 import dayjs from 'dayjs'
 import eventBus from 'utils/eventbus'
 import { EVENTS } from 'apis/constants'
 import { ExclamationCircleFilled } from '@ant-design/icons';
+import Channels  from 'components/Channels/Channels'
 
 export default class Article extends Component {
   searchParams = {
     page:1,
-    pageSize:10
+    pageSize:10,
+    status:'0'
   }
 
   state = {
-    channels: [],
     articles: {},
   }
 
@@ -30,14 +30,14 @@ export default class Article extends Component {
           <Breadcrumb items={
             [
               { title: <Link to="/layout/home">首页</Link> },
-              { title: <Link to="/layout/article">文章</Link> },
+              { title: '文章' },
               { title: <Link to="/layout/article-publish">文章发布</Link> }
             ]
           }/>
           }
         >
-          <Form onFinish={this.onSift}>
-            <Form.Item label="状态" name="status" initialValue={articleStatus[0].Value}>
+          <Form onFinish={this.onSift} initialValues={this.searchParams}>
+            <Form.Item label="状态" name="status">
               <Radio.Group>
                 {articleStatus.map(item => (
                   <Radio key={item.Value} value={item.Value}>
@@ -47,13 +47,7 @@ export default class Article extends Component {
               </Radio.Group>
             </Form.Item>
             <Form.Item label="频道" name="channel">
-              <Select style={{ width: 200 }} placeholder="请选择频道" allowClear={true}>
-                {this.state.channels.map(channel => (
-                  <Select.Option key={channel.id} value={channel.id}>
-                    {channel.name}
-                  </Select.Option>
-                ))}
-              </Select>
+              <Channels style={{width:'200px'}}></Channels>
             </Form.Item>
             <Form.Item label="日期" name="date">
               <DatePicker.RangePicker
@@ -69,7 +63,7 @@ export default class Article extends Component {
             </Form.Item>
           </Form>
         </Card>
-        <Card title={`查询结果：${total_count}条`}>
+        <Card title={`查询结果：${total_count?total_count:0}条`}>
             <Table columns={columnsDef} dataSource={results} rowKey="id" 
               pagination={{
                 pageSize: per_page,
@@ -87,21 +81,13 @@ export default class Article extends Component {
   }
 
   componentDidMount() {
-    this._getChannels();
-    this._getArticles();
+    this._getArticles(this.searchParams);
     this.columnDelListener();
   }
 
   componentWillUnmount(){
     // 清除所有监听器
     eventBus.all.clear();
-  }
-
-  async _getChannels(){
-    const channels = await getChannels();
-    if (channels) {
-      this.setState({ channels: channels.data.channels });
-    }
   }
 
   async _getArticles(params) {

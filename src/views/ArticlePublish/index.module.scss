@@ -1,0 +1,41 @@
+.root {
+    :global {
+        .title-input {
+            transition: width 0.3s ease, padding 0.2s ease;
+            text-overflow: ellipsis;
+            //媒体查询
+            // @media(max-width:991px) {
+            //     width:100%
+            // }
+            @media(min-width:992px) {
+                width: 400px;
+            }
+        }
+
+        .ch-input{
+            transition: width 0.3s ease, padding 0.2s ease;
+            // @media(max-width:991px) {
+            //     width:100%
+            // }
+            @media(min-width:992px) {
+                width: 200px;
+            }
+        }
+
+
+        .quill {
+            max-width: 1500px;
+        }
+
+        .ql-container {
+            min-height: 300px;
+            max-height: 1500px;
+
+        }
+
+        .ql-editor {
+            max-height: 1500px;
+            overflow: auto;
+        }
+    }
+}

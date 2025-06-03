@@ -18,6 +18,12 @@ export const articleStatus = [
     {label: '全部', Value: '-1', color: 'default'}
 ];
 
+export const coverUploadType = [
+  {label: '单图', value: '1'},
+  {label: '三图', value: '2'},
+  {label: '无图', value: '0'}
+];
+
 export const columnsDef = [
   {
     title:'id',
