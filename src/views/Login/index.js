@@ -73,7 +73,12 @@ class Login extends Component {
       // 如果state存在且有from属性，则跳转到from，否则跳转到/layout
       //this.props.history.push('/home'); 在 React Router v6（与 React 18/19 兼容的最新版本）中，this.props.history 已被废弃，以下是新的解决方案：
       // 使用高阶组件注入的navigate函数进行路由跳转
-      this.props.useNavigate(state?.from? state.from : '/layout');
+      const { from } = state ? state : {};
+      if(from){
+        this.props.useNavigate(from, {state:{from:from}});
+      }else{
+        this.props.useNavigate('/layout')
+      }
     } catch (error) {
       this.setState({ loading: false });
       message.warning(error?.response?.data.message,2);

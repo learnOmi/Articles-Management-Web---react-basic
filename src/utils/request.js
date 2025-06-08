@@ -8,14 +8,25 @@ export const baseURL = "http://geek.itheima.net/v1_0/"
 // 1.创建axios实例
 const sevice = axios.create({
     baseURL: baseURL,
+    headers: {
+        "Content-Type" : "application/json"
+    },
     timeout: 5000
 });
 
 // 2.请求拦截器
 sevice.interceptors.request.use(
     config => {
-        hasToken() && (config.headers.Authorization = `Bearer ${getToken()}`);
-        !hasToken() && (customhistory.push('/login'));
+        //!hasToken() && customhistory.location.pathname !== '/login' && (customhistory.push('/login'));
+        if(hasToken()) {
+            const { expire } = getToken();
+            if(!expire && expire < Date.now()){
+                message.error("Token invalid ！");
+                customhistory.push('/login');
+            }else{
+                (config.headers.Authorization = `Bearer ${getToken()}`);
+            }
+        } 
         return config;
     }, 
     err => {
@@ -31,7 +42,7 @@ sevice.interceptors.response.use(
     err => {
         const mes = err?.response?.data?.message;
         const status = err?.response?.status;
-        if (!status && status === 401) {
+        if (status && status === 401) {
             removeToken();
             // 401: token过期
             message.error(mes, 2);

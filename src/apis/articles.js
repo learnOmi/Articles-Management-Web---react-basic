@@ -14,3 +14,22 @@ export const delArticle = (params) => {
         method: 'DELETE',
     })
 }
+
+export const addArticle = (params) =>{
+    return request({
+        url: 'mp/articles',
+        method: 'POST',
+        data: params
+    });
+}
+
+export const addDraft = (params) =>{
+    const query = new URLSearchParams();
+    query.append("draft", true);
+    return request({
+        url: 'mp/articles',
+        method: 'POST',
+        params: query,
+        data: params
+    });
+}

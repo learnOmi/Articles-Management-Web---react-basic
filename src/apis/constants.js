@@ -19,9 +19,9 @@ export const articleStatus = [
 ];
 
 export const coverUploadType = [
-  {label: '单图', value: '1'},
-  {label: '三图', value: '2'},
-  {label: '无图', value: '0'}
+  {label: '单图', value: 1},
+  {label: '三图', value: 3},
+  {label: '无图', value: 0}
 ];
 
 export const columnsDef = [
@@ -94,3 +94,5 @@ const ARTICLE_EVENTS = {
 export const EVENTS = {
   ARTICLE_EVENTS
 };
+
+export const RESOLUTION = 3840 * 2160;

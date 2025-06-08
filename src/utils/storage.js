@@ -1,13 +1,16 @@
 const Token_key = 'RandomTOken_0021w';
 
 /**
- * @description: 设置token
- * @param {string} token
- * @return {void}
+ * @description: 设置token，ttl
+ * @param {*} token token值
+ * @param {*} ttl 毫秒
  */
-
-const setToken = (token) => {
-  localStorage.setItem(Token_key, token);
+const setToken = (token, ttl) => {
+  const obj = {
+    value: token,
+    expire: Date.now() + ttl
+  }
+  localStorage.setItem(Token_key,  JSON.stringify(obj));
 }
 
 /**
@@ -15,7 +18,9 @@ const setToken = (token) => {
  * @returns {string} token
  */
 const getToken = () => {
-  return localStorage.getItem(Token_key);
+  const obj = JSON.parse(localStorage.getItem(Token_key));
+  if(obj?.expire) return obj.expire > Date.now() ? obj.value : null;
+  return obj?.value;
 }
 
 /**

@@ -39,7 +39,7 @@ class LayoutComponent extends Component {
     colorBgContainer : this.props.useToken.token.colorBgContainer,
     borderRadiusLG : this.props.useToken.token.borderRadiusLG,
     profile : {},
-    defaultSelectedKeys : this.props.useLocation.pathname
+    defaultSelectedKeys : this.props.useLocation?.state?.from ? this.props.useLocation.state.from : this.props.useLocation.pathname
   }
 
   render() {
@@ -98,6 +98,8 @@ class LayoutComponent extends Component {
     this.props.useNavigate('/login');
     message.success('Logout successful!',1);
   };
+
+
 }
 
 
