@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Breadcrumb, Button, Card, Form, Input, Space, Radio, Upload, message, Image } from 'antd'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import styles from './index.module.scss'
 import Channels from 'components/Channels/Channels'
 import ReactQuill from 'react-quill-new'
@@ -8,7 +8,7 @@ import 'react-quill-new/dist/quill.snow.css'
 import { coverUploadType, RESOLUTION } from 'apis/constants'
 import UploadButton from 'components/UploadButton/UploadButton'
 import { baseURL } from 'utils/request'
-import { addArticle, addDraft } from 'apis/articles'
+import { addArticle, addDraft, getArticleDetail, updArticle, updArticleDraft } from 'apis/articles'
 import { hookWrapper } from 'utils/singlehookwrapper'
 
 class ArticlePublish extends Component {
@@ -20,7 +20,8 @@ class ArticlePublish extends Component {
     //imgUrl:'',
     fileList:[],
     preViewURL:'',
-    previewOpen:false
+    previewOpen:false,
+    passageid:null
   }
 
   render() {
@@ -30,7 +31,7 @@ class ArticlePublish extends Component {
           <Breadcrumb items={[
             { title: <Link to="/layout/home">首页</Link> },
             { title: <Link to="/layout/article">文章</Link> },
-            { title: '文章发布' }
+            { title: this.state.passageid ? '文章修改' : '文章发布' }
           ]}>
           </Breadcrumb>
         }>
@@ -109,7 +110,7 @@ class ArticlePublish extends Component {
             </Form.Item>
             <Form.Item wrapperCol={{align:'center'}}>
               <Space>
-                <Button htmlType='submit' type='primary'>提交</Button>
+                <Button htmlType='submit' type='primary'>{this.state.passageid? '修改' : '提交'}</Button>
                 <Button htmlType='button' onClick={this.onDraft}>存入草稿</Button>
               </Space>
             </Form.Item>
@@ -117,6 +118,27 @@ class ArticlePublish extends Component {
         </Card>
       </div>
     )
+  }
+
+  async componentDidMount(){
+    const {id} = this.props.useParams;
+    if(id){
+      this.setState({passageid:id});
+      const res = await getArticleDetail(id);
+      const { data } = res;
+      if(data){
+        const dataForForm = JSON.parse(JSON.stringify(data));
+        dataForForm['cover'] = data.cover.type;
+        this.setState({
+          covertype: dataForForm['cover'],
+          fileList: data.cover.images.map(item => {return {'url':item}})
+        });
+        this.formRef.current.setFieldsValue(dataForForm);
+      }else{
+        message.error('No such article!');
+        this.props.useNavigate('/layout/article');
+      }
+    } 
   }
 
   onSubmit = async (data)=>{
@@ -137,7 +159,15 @@ class ArticlePublish extends Component {
         images:images? images : []
       }
     };
-    const res = await addArticle(params);
+
+    let res;
+    if(!this.state.passageid){
+      res = await addArticle(params);
+    }else{
+      params['id'] = this.state.passageid;
+      res = await updArticle(params);
+    }
+
     if(res?.message){
       message.success(res.message);
       this.props.useNavigate('/layout/article')
@@ -160,7 +190,13 @@ class ArticlePublish extends Component {
       }
     };
 
-    const res = await addDraft(params);
+    let res;
+    if(!this.state.passageid){
+      res = await addDraft(params);
+    }else{
+      params['id'] = this.state.passageid
+      res = await updArticleDraft(params);
+    }
 
     if(res?.message){
       message.success(res.message);
@@ -210,4 +246,4 @@ class ArticlePublish extends Component {
 }
 
 
-export default hookWrapper(ArticlePublish, useNavigate)
+export default hookWrapper(ArticlePublish, useNavigate, useParams)

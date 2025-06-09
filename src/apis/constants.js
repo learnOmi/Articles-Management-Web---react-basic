@@ -79,8 +79,8 @@ export const columnsDef = [
     dataIndex: 'action',
     render: (_,param) => (
       <Space>
-        <Button type='primary' shape='round' icon={<EditOutlined />} />
-        <Button type='primary' shape='round' icon={<DeleteOutlined />} onClick={()=>eventBus.emit(ARTICLE_EVENTS.BUTTON_CLICKED,{type:'del', id:param?.id})}/>
+        <Button type='primary' shape='round' icon={<EditOutlined />} onClick={() => eventBus.emit(ARTICLE_EVENTS.BUTTON_CLICKED,{type:'mod', id:param?.id})} />
+        <Button type='primary' shape='round' icon={<DeleteOutlined />} onClick={()=>eventBus.emit(ARTICLE_EVENTS.BUTTON_CLICKED,{type:'del', id:param?.id})} />
       </Space>
     ), 
   },

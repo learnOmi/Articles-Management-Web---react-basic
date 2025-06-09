@@ -8,6 +8,13 @@ export const getArticles = (params) => {
     })
 }
 
+export const getArticleDetail = (id) => {
+    return request({
+        url: '/mp/articles/'+id,
+        method: 'GET'
+    })
+}
+
 export const delArticle = (params) => {
     return request({
         url: 'mp/articles/' + params.id,
@@ -32,4 +39,22 @@ export const addDraft = (params) =>{
         params: query,
         data: params
     });
+}
+
+export const updArticle = (params) =>{
+    return request({
+        url: 'mp/articles/' + params.id,
+        method: 'PUT',
+        data: params
+    })
+}
+
+export const updArticleDraft = (params) =>{
+    const query = new URLSearchParams();
+    query.append("draft", true);
+    return request({
+        url: 'mp/articles/' + params.id,
+        method: 'PUT',
+        data: params
+    })
 }

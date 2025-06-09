@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Outlet, useLocation } from 'react-router-dom';
+import { data, Outlet, useLocation } from 'react-router-dom';
 import styles from './index.module.scss'
 import { LaptopOutlined, LogoutOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { Layout, Menu, message, Popconfirm, theme } from 'antd';
@@ -13,7 +13,7 @@ const { Header, Content, Sider } = Layout;
 
 const items = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
   (icon, index) => {
-    const key = String(index + 1);
+    //const key = String(index + 1);
 
     return {
       key: sideMenu[index].url,
@@ -39,7 +39,7 @@ class LayoutComponent extends Component {
     colorBgContainer : this.props.useToken.token.colorBgContainer,
     borderRadiusLG : this.props.useToken.token.borderRadiusLG,
     profile : {},
-    defaultSelectedKeys : this.props.useLocation?.state?.from ? this.props.useLocation.state.from : this.props.useLocation.pathname
+    selectedKey : ''
   }
 
   render() {
@@ -62,7 +62,8 @@ class LayoutComponent extends Component {
               <Menu
                 theme='dark'
                 mode="inline"
-                defaultSelectedKeys={this.state.defaultSelectedKeys}
+                //defaultSelectedKeys={'/layout/home'}
+                selectedKeys={[this.state.selectedKey]}
                 className='sider-menu'
                 items={items}
                 onClick={(e) => {
@@ -82,14 +83,23 @@ class LayoutComponent extends Component {
   }
 
 
-  
   // componentDidMount() 是 React 组件生命周期中的一个方法
   // 在组件被挂载到 DOM 上后立即调用
   // 这个方法通常用于执行一些副作用操作，比如数据获取、订阅事件等
   // 在这个方法中，我们调用了 getUserInfo 函数来获取用户信息
   async componentDidMount() {
     const res = await getUserInfo();
-    this.setState({profile: res?.data});
+    this.setState({
+      profile: res?.data,
+      selectedKey: this.findDefaultKey(this.props.useLocation.pathname)
+    });
+
+  }
+
+  componentDidUpdate(prePops) {
+    if(prePops.useLocation.pathname.toString() !== this.props.useLocation.pathname.toString()){
+      this.setState({selectedKey:this.props.useLocation?.state?.from ? this.findDefaultKey(this.props.useLocation.state.from) : this.findDefaultKey(this.props.useLocation.pathname)});
+    }
   }
 
   logOut = ()=>{
@@ -99,7 +109,16 @@ class LayoutComponent extends Component {
     message.success('Logout successful!',1);
   };
 
-
+  findDefaultKey = (str)=>{
+    const urls = sideMenu.filter(item => str.includes(item.url));
+    urls.sort((a, b) => {
+      if(a.url > b.url) return -1;
+      if(a.url === b.url) return 0;
+      return 1;
+    });
+    if(urls) return urls[0].url;
+    else return '/layout/home'
+  }
 }
 
 

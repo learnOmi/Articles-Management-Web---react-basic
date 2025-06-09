@@ -25,6 +25,7 @@ function App() {
             <Route path='home' element={<Home />} />
             <Route path='article' element={<Article />} />
             <Route path='article-publish' element={<ArticlePublish />} />
+            <Route path='article-publish/:id' element={<ArticlePublish />} />
           </Route>
         </Routes>
       </HistoryRouter>

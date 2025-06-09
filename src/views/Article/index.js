@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Card, Breadcrumb, Radio, Button, DatePicker, Table, Modal, message } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from './index.module.scss'
 import { articleStatus } from 'apis/constants'
 import { columnsDef } from 'apis/constants'
@@ -10,12 +10,14 @@ import eventBus from 'utils/eventbus'
 import { EVENTS } from 'apis/constants'
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import Channels  from 'components/Channels/Channels'
+import { hookWrapper } from 'utils/singlehookwrapper'
 
-export default class Article extends Component {
+class Article extends Component {
+  formRef = React.createRef();
+
   searchParams = {
     page:1,
     pageSize:10,
-    status:'0'
   }
 
   state = {
@@ -36,7 +38,7 @@ export default class Article extends Component {
           }/>
           }
         >
-          <Form onFinish={this.onSift} initialValues={this.searchParams}>
+          <Form ref={this.formRef} onFinish={this.onSift} initialValues={{status:'0'}}>
             <Form.Item label="状态" name="status">
               <Radio.Group>
                 {articleStatus.map(item => (
@@ -100,29 +102,44 @@ export default class Article extends Component {
   }
 
   onPageChange = (page,pageSize)=>{
-    this.searchParams.page = page;
-    this.searchParams.per_page = pageSize;
-    this._getArticles(this.searchParams);
+    const params = this.dealSearchParam(this.searchParams,{...this.formRef.current.getFieldsValue(), page, pageSize})
+    this._getArticles(params);
   }
 
-  onSift = ({status,channel,date})=>{
-    const params = {
-      page:1
-    };
+  dealSearchParam = (targetSearchParams, params, isResetPage = false)=>{
+    const searchParams = Object.assign({}, targetSearchParams);
+
+    const {status, channel, date, page, pageSize} = params;
     if(status && Number(status) !== Number('-1')){
-      params['status'] = status;
+      searchParams['status'] = status;
     }
     if(channel){
-      params['channel_id'] = channel;
+      searchParams['channel_id'] = channel;
     }
     if(date){
       if(date[0]){
-        params['begin_pubdate'] = dayjs(date[0]).startOf('day').format('YYYY-MM-DD HH:mm:ss');
+        searchParams['begin_pubdate'] = dayjs(date[0]).startOf('day').format('YYYY-MM-DD HH:mm:ss');
       }
       if(date.length >= 2 && date[1]){
-        params['end_pubdate'] = dayjs(date[1]).endOf('day').format('YYYY-MM-DD HH:mm:ss');
+        searchParams['end_pubdate'] = dayjs(date[1]).endOf('day').format('YYYY-MM-DD HH:mm:ss');
       }
     }
+    if(page){
+      searchParams.page = page;
+    }
+    if(pageSize){
+      searchParams.pageSize = pageSize;
+    }
+
+    if(isResetPage){
+      searchParams.page = 1;
+    }
+
+    return searchParams;
+  }
+
+  onSift = (data)=>{
+    const params = this.dealSearchParam(this.searchParams, data, true);
     this._getArticles(params);
   }
 
@@ -144,8 +161,9 @@ export default class Article extends Component {
   }
 
   onColMod = (data) => {
-    console.log(data);
+    this.props.useNavigate('/layout/article-publish/' + data.id);
   }
 
-
 }
+
+export default hookWrapper(Article, useNavigate)
