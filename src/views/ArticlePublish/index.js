@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Breadcrumb, Button, Card, Form, Input, Space, Radio, Upload, message, Image } from 'antd'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import styles from './index.module.scss'
 import Channels from 'components/Channels/Channels'
 import ReactQuill from 'react-quill-new'
@@ -40,7 +40,7 @@ class ArticlePublish extends Component {
             labelCol={{span:4}} 
             size='large' 
             validateTrigger={['onChange', 'onBlur']}
-            initialValues={{cover:'0'}} >
+            initialValues={{cover:0}} >
             {/* name要赋值给Item才行 */}
             <Form.Item name='title' label='标题' rules={[
               { required:true, message:'Title cannot be empty!' }
@@ -64,7 +64,8 @@ class ArticlePublish extends Component {
             */}
             <Form.Item wrapperCol={{offset:4}}>
               <Form.Item>
-                {(this.state.covertype !== '0' && (
+                {(
+                  this.state.covertype !== 0 && (
                   <Upload
                     //upload的name属性主要用于文件上传到服务器时的字段名
                     name='image'
@@ -141,6 +142,16 @@ class ArticlePublish extends Component {
     } 
   }
 
+  // componentDidUpdate(prePops){
+  //   if(prePops.useLocation.pathname.toString() !== this.props.useLocation.pathname.toString()){
+  //     const { id } = this.props.useParams;
+  //     if(!id){
+  //       this.formRef.current.resetFields();
+  //       this.setState({fileList:[] ,passageid:null})
+  //     }
+  //   }
+  // }
+
   onSubmit = async (data)=>{
     const { fileList, covertype } = this.state;
     if(fileList.length !== Number(covertype)){
@@ -204,7 +215,7 @@ class ArticlePublish extends Component {
   }
 
   setCoverUploadType = (e)=>{
-    e.target.value && this.setState({covertype: e.target.value, fileList:[]});
+    this.setState({covertype: e.target.value, fileList:[]});
   }
 
   upLoadPics = (e)=>{
@@ -246,4 +257,4 @@ class ArticlePublish extends Component {
 }
 
 
-export default hookWrapper(ArticlePublish, useNavigate, useParams)
+export default hookWrapper(ArticlePublish, useNavigate, useLocation, useParams)

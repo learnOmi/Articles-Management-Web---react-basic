@@ -83,7 +83,8 @@ class Article extends Component {
   }
 
   componentDidMount() {
-    this._getArticles(this.searchParams);
+    //this._getArticles(this.searchParams);
+    this._getArticles({...this.formRef.current.getFieldsValue()});
     this.columnDelListener();
   }
 
@@ -92,8 +93,9 @@ class Article extends Component {
     eventBus.all.clear();
   }
 
-  async _getArticles(params) {
-    const articles = await getArticles(params);
+  async _getArticles(params, isResetPage = false) {
+    const dealtParams = this.dealSearchParam(this.searchParams, params, isResetPage)
+    const articles = await getArticles(dealtParams);
     if (articles) {
       this.setState({
         articles:articles.data
@@ -102,8 +104,8 @@ class Article extends Component {
   }
 
   onPageChange = (page,pageSize)=>{
-    const params = this.dealSearchParam(this.searchParams,{...this.formRef.current.getFieldsValue(), page, pageSize})
-    this._getArticles(params);
+    //const params = this.dealSearchParam(this.searchParams,{...this.formRef.current.getFieldsValue(), page, pageSize})
+    this._getArticles({...this.formRef.current.getFieldsValue(), page, pageSize});
   }
 
   dealSearchParam = (targetSearchParams, params, isResetPage = false)=>{
@@ -139,8 +141,8 @@ class Article extends Component {
   }
 
   onSift = (data)=>{
-    const params = this.dealSearchParam(this.searchParams, data, true);
-    this._getArticles(params);
+    //const params = this.dealSearchParam(this.searchParams, data, true);
+    this._getArticles(data, true);
   }
 
   columnDelListener = () => {

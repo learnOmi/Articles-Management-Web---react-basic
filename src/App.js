@@ -24,8 +24,8 @@ function App() {
             <Route index element={<Home />} />
             <Route path='home' element={<Home />} />
             <Route path='article' element={<Article />} />
-            <Route path='article-publish' element={<ArticlePublish />} />
-            <Route path='article-publish/:id' element={<ArticlePublish />} />
+            <Route path='article-publish' element={<ArticlePublish key='add' />} />
+            <Route path='article-publish/:id' element={<ArticlePublish key='edit'/>} />
           </Route>
         </Routes>
       </HistoryRouter>
