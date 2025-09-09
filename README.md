@@ -1,70 +1,115 @@
-# Getting Started with Create React App
+# Articles Management Web Application Guide
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to the Articles Management Web application! This guide will help you get the application running on your local machine in just a few minutes. This React-based application provides a comprehensive solution for managing articles with authentication, publishing, and content management features.
 
-## Available Scripts
+## Prerequisites
 
-In the project directory, you can run:
+Before you begin, ensure you have the following installed on your system:
 
-### `npm start`
+- Node.js (v14 or higher)
+- npm (v6 or higher) or yarn package manager
+- A modern web browser (Chrome, Firefox, Safari, or Edge)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The application is built with React 19.1.0 and uses Ant Design for the UI components, so you'll need a compatible development environment.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Installation
 
-### `npm test`
+Follow these steps to set up the project on your local machine:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Clone the repository (if you haven't already):
 
-### `npm run build`
+```bash
+git clone <repository-url>
+cd Articles-Management-Web---react-basic
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. Install dependencies:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+or if you prefer yarn:
 
-### `npm run eject`
+```bash
+yarn install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+This will install all required dependencies including React, Ant Design, Axios, and other packages listed in the package.json file.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Running the Application
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Once the dependencies are installed, you can start the development server:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Start the development server:
 
-## Learn More
+```bash
+npm start
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+or with yarn:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+yarn start
+```
 
-### Code Splitting
+Open your browser and navigate to `http://localhost:3000`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The application will automatically open in your default browser, and you'll see the login page. The development server supports hot reloading, so any changes you make to the code will be reflected immediately in the browser.
 
-### Analyzing the Bundle Size
+## Basic Usage
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Logging In
 
-### Making a Progressive Web App
+The application requires authentication to access its features. For demonstration purposes, you can use the following test credentials:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- Mobile Number: 13811111111
+- Verification Code: 386454
 
-### Advanced Configuration
+These credentials are pre-filled in the login form for your convenience. Simply click the "Login" button to access the application.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Navigating the Application
 
-### Deployment
+After logging in, you'll be redirected to the dashboard. The application has a sidebar navigation with the following main sections:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- 数据概览 (Data Overview) - The home page showing application statistics
+- 文章管理 (Article Management) - View and manage existing articles
+- 内容管理 (Content Management) - Create and publish new articles
 
-### `npm run build` fails to minify
+The application uses React Router for navigation, providing a smooth single-page application experience.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Managing Articles
+
+The core functionality of this application is article management. Here's how to perform basic operations:
+
+- **View Articles**: Navigate to "文章管理" to see a list of all articles with their status, publication date, and engagement metrics.
+
+- **Create a New Article**:
+ 1. Navigate to "内容管理"
+ 2. Fill in the article details including title, content, and cover image
+ 3. Choose the cover type (single image, three images, or no image)
+ 4. Save as draft or publish immediately
+
+- **Edit Existing Articles**:
+ 1. In the article list, click the edit button (pencil icon)
+ 2. Modify the article content
+ 3. Save your changes
+
+- **Delete Articles**:
+ 1. In the article list, click the delete button (trash icon)
+ 2. Confirm the deletion
+
+The application supports different article statuses: draft, pending review, approved, and rejected, which are color-coded for easy identification.
+
+The application uses an event bus for component communication, which allows different parts of the application to communicate without tight coupling. This is particularly useful for actions like editing or deleting articles from the list view.
+
+## Next Steps
+
+Now that you have the application running and understand the basic functionality, you might want to:
+
+- Explore the codebase: Check the `src` directory to understand the project structure and component organization.
+- Customize the API endpoint: The application is configured to use `http://geek.itheima.net/v1_0/` as the base URL. You can change this in `src/utils/request.js` to connect to your own backend.
+- Add new features: Extend the application with additional functionality based on your needs.
+- Build for production: When you're ready to deploy, run `npm run build` to create an optimized production build.
+
+Congratulations! You've successfully set up and are running the Articles Management Web application. For more detailed information about specific features or the application architecture, check out the other documentation in this series.
